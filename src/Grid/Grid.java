@@ -1,32 +1,29 @@
 package Grid;
 
-import Painter.Player;
 import org.academiadecodigo.simplegraphics.graphics.Color;
 import org.academiadecodigo.simplegraphics.graphics.Rectangle;
 
 public class Grid {
 
-    private static final int CELL_SIZE = 40;  // Tamanho de cada célula
-    public static final int COLS = 4;       // Número de colunas
-    public static final int ROWS = 4;       // Número de linhas
-    private static final int PADDING = 1;    // Margem da grid
+    private static final int CELL_SIZE = 40;  // Size of each cell
+    public static final int COLS = 4;        // Number of columns
+    public static final int ROWS = 4;        // Number of rows
+    private static final int PADDING = 1;    // Grid padding
     private int row;
     private int col;
     private Rectangle cell;
 
-
     public Grid() {
-        drawGrid();    // Desenha a grid ao inicializar
+        drawGrid();    // Draw the grid when initialized
     }
-
 
     public void drawGrid() {
         for (int row = 0; row < Grid.ROWS; row++) {
             for (int col = 0; col < Grid.COLS; col++) {
-                // Desenhar bordas de cada célula
+                // Draw borders for each cell
                 Rectangle border = new Rectangle(Grid.getX(col), Grid.getY(row), Grid.getCellSize(), Grid.getCellSize());
-                border.setColor(Color.BLACK); // Cor das bordas
-                border.draw();  // Desenha a borda (não preenche, só desenha)
+                border.setColor(Color.BLACK); // Border color
+                border.draw();  // Draw the border (not filled)
             }
         }
     }
@@ -35,12 +32,12 @@ public class Grid {
         drawGrid();
     }
 
-    // Calcula a coordenada X com base na coluna
+    // Calculate the X coordinate based on the column
     public static int getX(int col) {
         return PADDING + col * CELL_SIZE;
     }
 
-    // Calcula a coordenada Y com base na linha
+    // Calculate the Y coordinate based on the row
     public static int getY(int row) {
         return PADDING + row * CELL_SIZE;
     }
@@ -49,5 +46,3 @@ public class Grid {
         return CELL_SIZE;
     }
 }
-
-

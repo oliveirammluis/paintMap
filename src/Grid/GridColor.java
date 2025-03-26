@@ -1,4 +1,5 @@
 package Grid;
+
 import org.academiadecodigo.simplegraphics.graphics.Color;
 
 public enum GridColor {
