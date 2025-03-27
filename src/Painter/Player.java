@@ -23,7 +23,7 @@ public class Player implements KeyboardHandler {
     }
 
     void drawPlayer() {
-        this.player = new Rectangle(Grid.getX(0), Grid.getY(0), 40, 40);
+        this.player = new Rectangle(Grid.getX(0), Grid.getY(0), 20, 20);
         player.setColor(Color.BLUE);
         player.fill();
     }
