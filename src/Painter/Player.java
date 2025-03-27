@@ -64,6 +64,12 @@ public class Player implements KeyboardHandler {
         keyboardEventLoad.setKey(KeyboardEvent.KEY_L);
         keyboardEventLoad.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
         keyboard.addEventListener(keyboardEventLoad);
+
+        KeyboardEvent keyboardEventClear = new KeyboardEvent();
+        keyboardEventClear.setKey(KeyboardEvent.KEY_C);
+        keyboardEventClear.setKeyboardEventType(KeyboardEventType.KEY_PRESSED);
+        keyboard.addEventListener(keyboardEventClear);
+
     }
 
     @Override
@@ -111,6 +117,11 @@ public class Player implements KeyboardHandler {
             case KeyboardEvent.KEY_L:
                 loadGridState();  // Load the grid state when L is pressed
                 break;
+
+            case KeyboardEvent.KEY_C:
+                clearGridState();  // Limpa a grade quando C é pressionado
+                break;
+
         }
     }
 
@@ -129,11 +140,12 @@ public class Player implements KeyboardHandler {
 
     private void unfillCell(int row, int col) {
         Rectangle cellUnFill = new Rectangle(Grid.getX(col), Grid.getY(row), Grid.getCellSize(), Grid.getCellSize());
-        cellUnFill.setColor(Color.WHITE);
+        cellUnFill.setColor(Color.WHITE);  // Define a cor de fundo como branca
         cellUnFill.fill();
-        gridState[row][col] = false;
+        gridState[row][col] = false;  // Marca a célula como não preenchida
         grid.drawGrid();
     }
+
 
     // Method to save the grid state to a file
     private void saveGridState() {
@@ -167,4 +179,17 @@ public class Player implements KeyboardHandler {
             e.printStackTrace();
         }
     }
+
+    private void clearGridState() {
+        for (int row = 0; row < Grid.ROWS; row++) {
+            for (int col = 0; col < Grid.COLS; col++) {
+                if (gridState[row][col]) {
+                    unfillCell(row, col);  // Desfaz o preenchimento de todas as células
+                }
+            }
+        }
+        grid.drawGrid();
+        System.out.println("Grid state cleared!");
+    }
+
 }
