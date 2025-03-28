@@ -23,7 +23,10 @@ public class Player implements KeyboardHandler {
     }
 
     void drawPlayer() {
-        this.player = new Rectangle(Grid.getX(0), Grid.getY(0), 20, 20);
+        int playerX = Grid.getX(0) + Grid.getCellSize() / 2 - 10;
+        int playerY = Grid.getY(0) + Grid.getCellSize() / 2 - 10;
+
+        this.player = new Rectangle(playerX, playerY, 20, 20);
         player.setColor(Color.BLUE);
         player.fill();
     }
@@ -74,35 +77,35 @@ public class Player implements KeyboardHandler {
 
     @Override
     public void keyPressed(KeyboardEvent keyboardEvent) {
+        int playerRow = (player.getY() - Grid.getY(0)) / Grid.getCellSize();
+        int playerCol = (player.getX() - Grid.getX(0)) / Grid.getCellSize();
+
         switch (keyboardEvent.getKey()) {
             case KeyboardEvent.KEY_LEFT:
-                if (player.getX() > Grid.getX(0)) {
-                    player.translate(-Grid.getCellSize(), 0);
+                if (playerCol > 0) {
+                    playerCol--;
                 }
                 break;
 
             case KeyboardEvent.KEY_RIGHT:
-                if (player.getX() + Grid.getCellSize() < Grid.getX(Grid.COLS - 1) + Grid.getCellSize()) {
-                    player.translate(Grid.getCellSize(), 0);
+                if (playerCol < Grid.COLS - 1){
+                    playerCol++;
                 }
                 break;
 
             case KeyboardEvent.KEY_UP:
-                if (player.getY() > Grid.getY(0)) {
-                    player.translate(0, -Grid.getCellSize());
+                if (playerRow > 0){
+                    playerRow--;
                 }
                 break;
 
             case KeyboardEvent.KEY_DOWN:
-                if (player.getY() + Grid.getCellSize() < Grid.getY(Grid.ROWS - 1) + Grid.getCellSize()) {
-                    player.translate(0, Grid.getCellSize());
+                if (playerRow < Grid.ROWS - 1){
+                    playerRow++;
                 }
                 break;
 
             case KeyboardEvent.KEY_SPACE:
-                int playerRow = (player.getY() - Grid.getY(0)) / Grid.getCellSize();
-                int playerCol = (player.getX() - Grid.getX(0)) / Grid.getCellSize();
-
                 if (gridState[playerRow][playerCol]) {
                     unfillCell(playerRow, playerCol);
                 } else {
@@ -123,6 +126,9 @@ public class Player implements KeyboardHandler {
                 break;
 
         }
+
+        centerPlayerInCell(playerRow, playerCol);
+
     }
 
     @Override
@@ -190,6 +196,13 @@ public class Player implements KeyboardHandler {
         }
         grid.drawGrid();
         System.out.println("Grid state cleared!");
+    }
+
+    private void centerPlayerInCell(int row, int col){
+        int xPos = Grid.getX(col) + Grid.getCellSize() / 2 - 10;
+        int yPos = Grid.getY(row) + Grid.getCellSize() / 2 - 10;
+
+        player.translate(xPos - player.getX(), yPos - player.getY());
     }
 
 }
