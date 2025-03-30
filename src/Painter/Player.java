@@ -142,6 +142,8 @@ public class Player implements KeyboardHandler {
         cell.fill();
         gridState[row][col] = true;
         grid.drawGrid();
+
+        drawPlayer();
     }
 
     private void unfillCell(int row, int col) {
@@ -150,6 +152,8 @@ public class Player implements KeyboardHandler {
         cellUnFill.fill();
         gridState[row][col] = false;  // Marca a célula como não preenchida
         grid.drawGrid();
+
+        drawPlayer();
     }
 
 
