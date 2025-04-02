@@ -14,6 +14,8 @@ public class Player implements KeyboardHandler {
     private Rectangle player;
     private Keyboard keyboard;
     private boolean[][] gridState = new boolean[Grid.ROWS][Grid.COLS];
+    private int playerRow = 0;
+    private int playerCol = 0;
     Grid grid = new Grid();
 
     public Player() {
@@ -29,6 +31,12 @@ public class Player implements KeyboardHandler {
         this.player = new Rectangle(playerX, playerY, 20, 20);
         player.setColor(Color.BLUE);
         player.fill();
+    }
+
+    private void updatePlayerPosition(int row, int col) {
+        this.playerRow = row;
+        this.playerCol = col;
+        centerPlayerInCell(row, col);
     }
 
     public void createKeyboardEvents() {
@@ -88,47 +96,46 @@ public class Player implements KeyboardHandler {
                 break;
 
             case KeyboardEvent.KEY_RIGHT:
-                if (playerCol < Grid.COLS - 1){
+                if (playerCol < Grid.COLS - 1) {
                     playerCol++;
                 }
                 break;
 
             case KeyboardEvent.KEY_UP:
-                if (playerRow > 0){
+                if (playerRow > 0) {
                     playerRow--;
                 }
                 break;
 
             case KeyboardEvent.KEY_DOWN:
-                if (playerRow < Grid.ROWS - 1){
+                if (playerRow < Grid.ROWS - 1) {
                     playerRow++;
                 }
                 break;
 
             case KeyboardEvent.KEY_SPACE:
                 if (gridState[playerRow][playerCol]) {
-                    unfillCell(playerRow, playerCol);
+                    unfillCell(playerRow, playerCol); // Limpa célula
                 } else {
-                    fillCell(playerRow, playerCol, GridColor.GREEN);
+                    fillCell(playerRow, playerCol, GridColor.GREEN); // Pinta a célula, retorna rectangulo
+                    // filledCells guardar posição do player
                 }
                 break;
 
             case KeyboardEvent.KEY_S:
-                saveGridState();  // Save the grid state when S is pressed
+                saveGridState();  // Guarda estado da grid
                 break;
 
             case KeyboardEvent.KEY_L:
-                loadGridState();  // Load the grid state when L is pressed
+                loadGridState();  // Carrega estado guardado
                 break;
 
             case KeyboardEvent.KEY_C:
-                clearGridState();  // Limpa a grade quando C é pressionado
+                clearGridState();  // Limpa a grid
                 break;
 
         }
-
         centerPlayerInCell(playerRow, playerCol);
-
     }
 
     @Override
@@ -136,35 +143,34 @@ public class Player implements KeyboardHandler {
         // No action needed here for now
     }
 
-    private void fillCell(int row, int col, GridColor gridColor) {
+    private Rectangle fillCell(int row, int col, GridColor gridColor) {
         Rectangle cell = new Rectangle(Grid.getX(col), Grid.getY(row), Grid.getCellSize(), Grid.getCellSize());
         cell.setColor(gridColor.getColor());
-        cell.fill();
-        gridState[row][col] = true;
-        grid.drawGrid();
-
-        drawPlayer();
+        cell.fill();// Preenche célula
+        gridState[row][col] = true; // Marca a célula como preenchida
+        grid.drawGrid(); // Desenha a grid
+        return cell;
     }
 
     private void unfillCell(int row, int col) {
+
         Rectangle cellUnFill = new Rectangle(Grid.getX(col), Grid.getY(row), Grid.getCellSize(), Grid.getCellSize());
         cellUnFill.setColor(Color.WHITE);  // Define a cor de fundo como branca
-        cellUnFill.fill();
+        cellUnFill.fill(); // cell.delete
         gridState[row][col] = false;  // Marca a célula como não preenchida
         grid.drawGrid();
-
-        drawPlayer();
+        // drawPlayer();
     }
 
 
-    // Method to save the grid state to a file
+    // Método para guardar estado da grid
     private void saveGridState() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("gridState.txt"))) {
             for (int row = 0; row < Grid.ROWS; row++) {
                 for (int col = 0; col < Grid.COLS; col++) {
                     if (gridState[row][col]) {
                         writer.write(row + "," + col);
-                        writer.newLine();  // New line after each position
+                        writer.newLine();  // Nova linha após cada posição
                     }
                 }
             }
@@ -174,7 +180,7 @@ public class Player implements KeyboardHandler {
         }
     }
 
-    // Method to load the grid state from a file
+    // Método para carregar estado da grip guardado
     private void loadGridState() {
         try (BufferedReader reader = new BufferedReader(new FileReader("gridState.txt"))) {
             String line;
@@ -200,13 +206,17 @@ public class Player implements KeyboardHandler {
         }
         grid.drawGrid();
         System.out.println("Grid state cleared!");
+        drawPlayer();
     }
 
-    private void centerPlayerInCell(int row, int col){
+    private void centerPlayerInCell(int row, int col) {
+        // Calcula nova posição do player (centrado)
         int xPos = Grid.getX(col) + Grid.getCellSize() / 2 - 10;
         int yPos = Grid.getY(row) + Grid.getCellSize() / 2 - 10;
-
+        // Move o player para nova célula
         player.translate(xPos - player.getX(), yPos - player.getY());
-    }
 
+        // drawPlayer();
+    }
 }
+
